@@ -1,33 +1,36 @@
-const SEARCH_TERM = "earrings";
+const SEARCH_TERM = "tops";
 const NUMBER_OF_RESULTS = 6;
+
+//    products(search: "${SEARCH_TERM}") {
 
 const query = {
   query: `{
-    products(search: "${SEARCH_TERM}") {
+    products(
+      search: "${SEARCH_TERM}"
+      sort: {name: ASC}
+      ) {
       items {
+          __typename
         name
         sku
+        special_price
         price_range {
           minimum_price {
-            regular_price {
-              value
-              currency
-            }
+            discount { percent_off }
+            regular_price { value }
+            final_price { value }
           }
         }
         image {
           url
         }
-        ... on SimpleProduct {
-          demoDetails {
-            
-            sku
-            location
-            quantity
-          }
+        inventory_details {
+          sku
+          location
+          quantity
         }
       }
     }
-  }`
+  }`,
 };
 export default query;
