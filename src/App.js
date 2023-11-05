@@ -9,7 +9,7 @@ const API_MESH_URL =
   "https://graph.adobe.io/api/b0dbe9d4-3f38-449f-960b-d552262df0fd/graphql?api_key=7715c008367e49b48a760bc1e7c53997";
 
 const SOURCE_1_NAME = "Source: Adobe Commerce";
-const SOURCE_2_NAME = "Source: Runtime";
+const SOURCE_2_NAME = "Source: ERP";
 
 const USDollar = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -39,10 +39,9 @@ class APIMeshExample extends React.Component {
       .then((response) => response.json())
       .then((res) => {
         console.log(res);
-
         this.setState({
           apiMeshRes: res.data,
-          products: res.data.products.items,
+          products: res.data.products ? res.data.products.items : [],
         });
       });
   }
@@ -64,7 +63,8 @@ class APIMeshExample extends React.Component {
                         {item.name}
                       </p>
 
-                      {item.special_price ? (
+                      {item.price_range.minimum_price.discount.percent_off >
+                      0 ? (
                         <div className="price-container">
                           <p
                             className="price strike"
@@ -82,7 +82,9 @@ class APIMeshExample extends React.Component {
                             className="price sale"
                             id={idx + this.state.salePrice}
                           >
-                            {USDollar.format(item.special_price)}
+                            {USDollar.format(
+                              item.price_range.minimum_price.final_price.value,
+                            )}
                           </p>
                         </div>
                       ) : (
@@ -94,7 +96,8 @@ class APIMeshExample extends React.Component {
                       <button>ADD TO CART</button>
                       <span>&#9825;</span>
 
-                      {item.inventory_details ? (
+                      {item.inventory_details &&
+                      item.inventory_details.quantity > 0 ? (
                         <div>
                           <p className="auto-width" id={item.sku}>
                             Items remaining: {item.inventory_details.quantity}
