@@ -12,20 +12,12 @@ const query = {
         sku
         price_range {
           minimum_price {
-            # we don't need "discount.value" anymore # discount { percent_off }
-            # we're using "discount_percentage"
+            discount { percent_off }
             regular_price { value }
-            # we don't need "final_price.value" anymore #  final_price { value }
-            #we're using "discounted_price"
+            final_price { value }
           }
         }
-        ... on ConfigurableProduct {
-          discounted_price
-          discount_percentage
-          inventory_details {
-            sku location quantity
-          }
-        }
+        stock_status
         image { url }
       }
     }
