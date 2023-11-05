@@ -57,11 +57,11 @@ class APIMeshExample extends React.Component {
                     <li id={idx} key={item.sku}>
                       <img id={item.image.url} src={item.image.url} />
                       <p className="item-name auto-width" id={item.name}>
-                        {item.name} ( {item.sku} )
+                        {item.name}
                       </p>
 
-                      {item.price_range.minimum_price.discount.percent_off >
-                      0 ? (
+                      {item.discount_percentage &&
+                      item.discount_percentage > 0 ? (
                         <div className="price-container">
                           <p className="price strike">
                             {USDollar.format(
@@ -69,19 +69,12 @@ class APIMeshExample extends React.Component {
                                 .value,
                             )}
                           </p>
-                          <p className="sale price-container">
-                            {USDollar.format(
-                              item.price_range.minimum_price.final_price.value,
-                            )}{" "}
-                            (
-                            <span>
-                              {
-                                item.price_range.minimum_price.regular_price
-                                  .value
-                              }
-                              % Off
-                            </span>
-                            )
+                          <p
+                            className="sale price-container"
+                            id={idx + this.state.salePrice}
+                          >
+                            {USDollar.format(item.discounted_price)} (
+                            <span>{item.discount_percentage}% Off</span>)
                           </p>
                         </div>
                       ) : (
@@ -92,20 +85,28 @@ class APIMeshExample extends React.Component {
 
                       <button
                         className={
-                          item.stock_status == "IN_STOCK"
+                          item.inventory_details &&
+                          item.inventory_details.quantity > 0
                             ? "enabled-button"
                             : "disabled-button"
                         }
-                        disabled={item.stock_status == "IN_STOCK"}
+                        disabled={
+                          (item.inventory_details &&
+                            !item.inventory_details.quantity) > 0
+                        }
                       >
                         ADD TO CART
                       </button>
                       <span>&#9825;</span>
 
-                      {item.stock_status == "IN_STOCK" ? (
+                      {item.inventory_details &&
+                      item.inventory_details.quantity > 0 ? (
                         <div>
                           <p className="auto-width" id={item.sku}>
-                            In Stock
+                            Items remaining: {item.inventory_details.quantity}
+                          </p>
+                          <p className="auto-width" id={item.sku + idx}>
+                            Location: {item.inventory_details.location}
                           </p>
                         </div>
                       ) : (
@@ -119,6 +120,9 @@ class APIMeshExample extends React.Component {
                   </>
                 ))}
               </ul>
+            </div>
+            <div>
+              <CodeSidebar meshResponse={this.state.apiMeshRes} />
             </div>
           </div>
         </div>
