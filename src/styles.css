@@ -113,3 +113,13 @@ input {
   float: right;
   margin: 10px 10px;
 }
+
+.disabled-button {
+  background-color: rgb(129, 129, 129);
+  opacity: 0.3;
+}
+
+.enabled-button {
+  background-color: blue;
+  opacity: 1;
+}

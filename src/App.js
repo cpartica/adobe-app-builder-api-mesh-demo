@@ -64,7 +64,7 @@ class APIMeshExample extends React.Component {
                       {item.discount_percentage &&
                       item.discount_percentage > 0 ? (
                         <div className="price-container">
-                          <p class="price strike">
+                          <p className="price strike">
                             {USDollar.format(
                               item.price_range.minimum_price.regular_price
                                 .value,
@@ -84,7 +84,20 @@ class APIMeshExample extends React.Component {
                         </p>
                       )}
 
-                      <button>ADD TO CART</button>
+                      <button
+                        className={
+                          item.inventory_details &&
+                          item.inventory_details.quantity > 0
+                            ? "enabled-button"
+                            : "disabled-button"
+                        }
+                        disabled={
+                          (item.inventory_details &&
+                            !item.inventory_details.quantity) > 0
+                        }
+                      >
+                        ADD TO CART
+                      </button>
                       <span>&#9825;</span>
 
                       {item.inventory_details &&
