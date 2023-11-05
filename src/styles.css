@@ -13,7 +13,7 @@ img {
 }
 
 ul {
-  display:grid;
+  display: grid;
   grid-template-columns: 300px 300px 300px;
   grid-template-rows: 600px;
   list-style: none;
@@ -34,7 +34,7 @@ button {
 }
 
 a:link {
-  color:  rgb(178 178 178);
+  color: rgb(178 178 178);
   text-decoration: none;
 }
 
@@ -66,7 +66,7 @@ a:link {
 }
 
 .price-container {
-  margin-top: -25px;
+  margin-top: -15px;
 }
 
 .price {
@@ -97,13 +97,13 @@ input {
   color: white;
   width: 500px;
   height: 900px;
-  overflow: scroll;  
-  margin-right: 20px
+  overflow: scroll;
+  margin-right: 20px;
 }
 
 .results {
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
 }
 
 .code-toggle {

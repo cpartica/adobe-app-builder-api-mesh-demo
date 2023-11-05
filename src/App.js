@@ -1,7 +1,5 @@
 import "./styles.css";
-import "react-tooltip/dist/react-tooltip.css";
 import React from "react";
-import { Tooltip } from "react-tooltip";
 import query from "./query.js";
 import CodeSidebar from "./codeSidebar";
 
@@ -63,28 +61,21 @@ class APIMeshExample extends React.Component {
                         {item.name}
                       </p>
 
-                      {item.price_range.minimum_price.discount.percent_off >
-                      0 ? (
+                      {item.discount_percentage &&
+                      item.discount_percentage > 0 ? (
                         <div className="price-container">
-                          <p
-                            className="price strike"
-                            id={
-                              idx +
-                              item.price_range.minimum_price.regular_price.value
-                            }
-                          >
+                          <p class="price strike">
                             {USDollar.format(
                               item.price_range.minimum_price.regular_price
                                 .value,
                             )}
                           </p>
                           <p
-                            className="price sale"
+                            className="sale price-container"
                             id={idx + this.state.salePrice}
                           >
-                            {USDollar.format(
-                              item.price_range.minimum_price.final_price.value,
-                            )}
+                            {USDollar.format(item.discounted_price)} (
+                            <span>{item.discount_percentage}% Off</span>)
                           </p>
                         </div>
                       ) : (
@@ -96,50 +87,23 @@ class APIMeshExample extends React.Component {
                       <button>ADD TO CART</button>
                       <span>&#9825;</span>
 
-                      <Tooltip
-                        anchorId={item.image.url}
-                        place="bottom"
-                        content={SOURCE_1_NAME}
-                      />
-
-                      <Tooltip
-                        anchorId={item.name}
-                        place="bottom"
-                        content={SOURCE_1_NAME}
-                      />
-
-                      <Tooltip
-                        anchorId={
-                          idx +
-                          item.price_range.minimum_price.regular_price.value
-                        }
-                        place="bottom"
-                        content={SOURCE_1_NAME}
-                      />
-
-                      <Tooltip
-                        anchorId={idx + this.state.salePrice}
-                        place="bottom"
-                        content={SOURCE_2_NAME}
-                      />
-
-                      <Tooltip
-                        anchorId={"price"}
-                        place="bottom"
-                        content={SOURCE_1_NAME}
-                      />
-
-                      <Tooltip
-                        anchorId={item.sku}
-                        place="bottom"
-                        content={SOURCE_2_NAME}
-                      />
-
-                      <Tooltip
-                        anchorId={item.sku + idx}
-                        place="bottom"
-                        content={SOURCE_2_NAME}
-                      />
+                      {item.inventory_details &&
+                      item.inventory_details.quantity > 0 ? (
+                        <div>
+                          <p className="auto-width" id={item.sku}>
+                            Items remaining: {item.inventory_details.quantity}
+                          </p>
+                          <p className="auto-width" id={item.sku + idx}>
+                            Location: {item.inventory_details.location}
+                          </p>
+                        </div>
+                      ) : (
+                        <div>
+                          <p className="auto-width sale" id={item.sku}>
+                            Out of Stock
+                          </p>
+                        </div>
+                      )}
                     </li>
                   </>
                 ))}
