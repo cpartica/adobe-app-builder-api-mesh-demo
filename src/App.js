@@ -6,9 +6,6 @@ import CodeSidebar from "./codeSidebar";
 const API_MESH_URL =
   "https://graph.adobe.io/api/b0dbe9d4-3f38-449f-960b-d552262df0fd/graphql?api_key=7715c008367e49b48a760bc1e7c53997";
 
-const SOURCE_1_NAME = "Source: Adobe Commerce";
-const SOURCE_2_NAME = "Source: ERP";
-
 const USDollar = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "USD",
@@ -18,7 +15,6 @@ class APIMeshExample extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      apiMeshRes: "",
       products: [],
     };
   }
@@ -37,7 +33,6 @@ class APIMeshExample extends React.Component {
       .then((res) => {
         console.log(res);
         this.setState({
-          apiMeshRes: res.data,
           products: res.data.products ? res.data.products.items : [],
         });
       });
@@ -57,11 +52,11 @@ class APIMeshExample extends React.Component {
                     <li id={idx} key={item.sku}>
                       <img id={item.image.url} src={item.image.url} />
                       <p className="item-name auto-width" id={item.name}>
-                        {item.name} ( {item.sku} )
+                        {item.name}
                       </p>
 
-                      {item.price_range.minimum_price.discount.percent_off >
-                      0 ? (
+                      {item.discount_percentage &&
+                      item.discount_percentage > 0 ? (
                         <div className="price-container">
                           <p className="price strike">
                             {USDollar.format(
@@ -69,49 +64,44 @@ class APIMeshExample extends React.Component {
                                 .value,
                             )}
                           </p>
-                          <p className="sale price-container">
-                            {USDollar.format(
-                              item.price_range.minimum_price.final_price.value,
-                            )}{" "}
-                            (
-                            <span>
-                              {
-                                item.price_range.minimum_price.regular_price
-                                  .value
-                              }
-                              % Off
-                            </span>
-                            )
+                          <p
+                            className="sale price-container"
+                            id={idx + this.state.salePrice}
+                          >
+                            {USDollar.format(item.discounted_price)} (
+                            <span>{item.discount_percentage}% Off</span>)
                           </p>
                         </div>
                       ) : (
-                        <div className="price-container">
-                          <p className="price">
-                            {USDollar.format(
-                              item.price_range.minimum_price.regular_price
-                                .value,
-                            )}
-                          </p>
-                          <p className="sale price-container">No Discount</p>
-                        </div>
+                        <p id="price">
+                          ${item.price_range.minimum_price.regular_price.value}
+                        </p>
                       )}
 
                       <button
                         className={
-                          item.stock_status == "IN_STOCK"
+                          item.inventory_details &&
+                          item.inventory_details.quantity > 0
                             ? "enabled-button"
                             : "disabled-button"
                         }
-                        disabled={item.stock_status == "IN_STOCK"}
+                        disabled={
+                          (item.inventory_details &&
+                            !item.inventory_details.quantity) > 0
+                        }
                       >
                         ADD TO CART
                       </button>
                       <span>&#9825;</span>
 
-                      {item.stock_status == "IN_STOCK" ? (
+                      {item.inventory_details &&
+                      item.inventory_details.quantity > 0 ? (
                         <div>
                           <p className="auto-width" id={item.sku}>
-                            In Stock
+                            Items remaining: {item.inventory_details.quantity}
+                          </p>
+                          <p className="auto-width" id={item.sku + idx}>
+                            Location: {item.inventory_details.location}
                           </p>
                         </div>
                       ) : (
