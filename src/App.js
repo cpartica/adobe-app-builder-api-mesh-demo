@@ -96,24 +96,6 @@ class APIMeshExample extends React.Component {
                       <button>ADD TO CART</button>
                       <span>&#9825;</span>
 
-                      {item.inventory_details &&
-                      item.inventory_details.quantity > 0 ? (
-                        <div>
-                          <p className="auto-width" id={item.sku}>
-                            Items remaining: {item.inventory_details.quantity}
-                          </p>
-                          <p className="auto-width" id={item.sku + idx}>
-                            Location: {item.inventory_details.location}
-                          </p>
-                        </div>
-                      ) : (
-                        <div>
-                          <p className="auto-width" id={item.sku}>
-                            Out of Stock
-                          </p>
-                        </div>
-                      )}
-
                       <Tooltip
                         anchorId={item.image.url}
                         place="bottom"

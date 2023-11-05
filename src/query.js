@@ -18,13 +18,6 @@ const query = {
             final_price { value }
           }
         }
-        ... on ConfigurableProduct {
-          discounted_price
-          discount_percentage
-          inventory_details {
-            sku location quantity
-          }
-        }
         image { url }
       }
     }
