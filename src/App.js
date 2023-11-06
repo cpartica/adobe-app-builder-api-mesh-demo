@@ -1,7 +1,6 @@
 import "./styles.css";
 import React from "react";
 import query from "./query.js";
-import CodeSidebar from "./codeSidebar";
 
 const API_MESH_URL =
   "https://graph.adobe.io/api/b0dbe9d4-3f38-449f-960b-d552262df0fd/graphql?api_key=7715c008367e49b48a760bc1e7c53997";
@@ -52,11 +51,11 @@ class APIMeshExample extends React.Component {
                     <li id={idx} key={item.sku}>
                       <img id={item.image.url} src={item.image.url} />
                       <p className="item-name auto-width" id={item.name}>
-                        {item.name}
+                        {item.name} ( {item.sku} )
                       </p>
 
-                      {item.discount_percentage &&
-                      item.discount_percentage > 0 ? (
+                      {item.price_range.minimum_price.discount.percent_off >
+                      0 ? (
                         <div className="price-container">
                           <p className="price strike">
                             {USDollar.format(
@@ -64,44 +63,49 @@ class APIMeshExample extends React.Component {
                                 .value,
                             )}
                           </p>
-                          <p
-                            className="sale price-container"
-                            id={idx + this.state.salePrice}
-                          >
-                            {USDollar.format(item.discounted_price)} (
-                            <span>{item.discount_percentage}% Off</span>)
+                          <p className="sale price-container">
+                            {USDollar.format(
+                              item.price_range.minimum_price.final_price.value,
+                            )}{" "}
+                            (
+                            <span>
+                              {
+                                item.price_range.minimum_price.discount
+                                  .percent_off
+                              }
+                              % Off
+                            </span>
+                            )
                           </p>
                         </div>
                       ) : (
-                        <p id="price">
-                          ${item.price_range.minimum_price.regular_price.value}
-                        </p>
+                        <div className="price-container">
+                          <p className="price">
+                            {USDollar.format(
+                              item.price_range.minimum_price.regular_price
+                                .value,
+                            )}
+                          </p>
+                          <p className="sale price-container">No Discount</p>
+                        </div>
                       )}
 
                       <button
                         className={
-                          item.inventory_details &&
-                          item.inventory_details.quantity > 0
+                          item.stock_status == "IN_STOCK"
                             ? "enabled-button"
                             : "disabled-button"
                         }
-                        disabled={
-                          (item.inventory_details &&
-                            !item.inventory_details.quantity) > 0
-                        }
+                        disabled={item.stock_status == "IN_STOCK"}
                       >
                         ADD TO CART
                       </button>
                       <span>&#9825;</span>
 
-                      {item.inventory_details &&
-                      item.inventory_details.quantity > 0 ? (
+                      {item.stock_status == "IN_STOCK" ? (
                         <div>
                           <p className="auto-width" id={item.sku}>
-                            Items remaining: {item.inventory_details.quantity}
-                          </p>
-                          <p className="auto-width" id={item.sku + idx}>
-                            Location: {item.inventory_details.location}
+                            In Stock
                           </p>
                         </div>
                       ) : (
