@@ -70,8 +70,8 @@ class APIMeshExample extends React.Component {
                             (
                             <span>
                               {
-                                item.price_range.minimum_price.regular_price
-                                  .value
+                                item.price_range.minimum_price.discount
+                                  .percent_off
                               }
                               % Off
                             </span>
